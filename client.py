@@ -1,13 +1,25 @@
 import socket
 
-HOST = '10.57.33.239'  
-PORT = 3042
+class Client:
 
-sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
+    def __init__(self, server_host, server_port):
+        self.__server_host = server_host
+        self.__server_port = server_port
+    
+    def get_server_host(self):
+        return self.__server_host
+    
+    def get_server_port(self):
+        return self.__server_port
+    
+    def send_message(self,message):
+        sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
+        sckt.connect((self.__server_host,self.__server_port)) #Connect socket to server
+        sckt.send(message.encode()) #Send data to socket
+        sckt.close()
 
-sckt.connect((HOST,PORT)) #Connect socket to server
 
-sckt.send("Message de test".encode()) #Send data to socket
 
-sckt.close()
+
+
 
