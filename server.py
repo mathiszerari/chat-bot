@@ -8,17 +8,24 @@ print("socket : ",sckt)
 
 sckt.bind((HOST,PORT)) #Address Ip, Port
 
+
 while True:
     sckt.listen(5) # Listen incoming connexions
     client,address = sckt.accept() # Return socket (client= new socket, address = (address IP, PORT))
+    
 
     print(f"{client} client")
     print(f"{address} connected")
 
-    response = client.recv(255) # Limit to 255 characters
+    response = client.recv(1024) # Limit to 1024 characters
+    response = response.decode("utf8")
 
     if response != "":
-        print(response)
+        messages = response.split("\n")
+        messages.pop()
+        print(messages)
+        for message in messages:
+            print(message)
 
 print("Close")
 client.close()
