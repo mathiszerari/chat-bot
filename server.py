@@ -1,6 +1,6 @@
 import socket
 
-HOST = ''
+HOST = '92.174.83.81'
 PORT = 3042
 
 sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
@@ -14,7 +14,7 @@ while True:
 
     print(f"{address} connected")
 
-    response = client.recv(255)
+    response = client.recv(255) # Limit to 255 characters
 
     if response != "":
         print(response)
