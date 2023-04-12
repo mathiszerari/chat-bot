@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Xml.Linq;
 
-namespace TestServerTCP
+namespace ServerTCP
 {
     public class Program
     {
