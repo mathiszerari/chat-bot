@@ -1,6 +1,7 @@
 from client import Client
 import sys
 import threading
+import time
 
 # host local '10.57.33.239'
 
@@ -29,14 +30,22 @@ def choose_option():
             client.disconnect()
             sys.exit()
 
-while(True):
 
-    receive_message_thread = threading.Thread(target=client.receive_message)
-    receive_message_thread.start()
 
-    send_message_thread = threading.Thread(target=choose_option)
-    send_message_thread.start()
-    send_message_thread.join()
+# send_message_thread = threading.Thread(target=choose_option)
+# send_message_thread.start()
+# send_message_thread.join()
+
+receive_message_thread = threading.Thread(target=client.receive_message)
+receive_message_thread.start()
+# receive_message_thread.join()
+
+client.send_message()
+
+
+    
+
+    
 
     
     

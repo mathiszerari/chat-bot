@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 class Client:
 
@@ -7,8 +8,8 @@ class Client:
         self.__server_host = server_host
         self.__server_port = server_port
         self.__sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
-        self.__pseudo = self.create_pseudo()
         self.connect()
+        self.__pseudo = ""
     
     def get_server_host(self):
         return self.__server_host
@@ -29,6 +30,8 @@ class Client:
     
     def connect(self):
         self.__sckt.connect((self.__server_host,self.__server_port)) #Connect socket to server
+        self.create_pseudo()
+        self.__sckt.send((self.__pseudo + "\n").encode())
     
     def disconnect(self):
         self.__sckt.close()
@@ -37,16 +40,14 @@ class Client:
         message = input("Enter message : ")
         while(len(message)<= 0):
             message = input("Enter message : ")    
-        self.__sckt.send((message + "\n").encode()) #Send data to socket
+        self.__sckt.send(message.encode()) #Send data to socket
 
 
     def receive_message(self):
-
-        response = self.__sckt.recv(1024) # Limit to 1024 characters
-        response = response.decode("utf8")
-        print(response)
-
-
-
-
-
+        while(True):
+            response = self.__sckt.recv(1024).decode("utf8") # Limit to 1024 characters
+            print(len(response))
+            if response !="":
+                print(response)
+                print("AAA")
+            time.sleep(3)
