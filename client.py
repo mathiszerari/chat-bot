@@ -22,7 +22,7 @@ class Client:
     def create_pseudo(self):
         tmp_pseudo = input("Enter pseudo : ")
         
-        while(tmp_pseudo >20):
+        while(len(tmp_pseudo)>20 and len(tmp_pseudo) <= 0):
             tmp_pseudo = input("Enter pseudo : ")
         
         self.__pseudo = tmp_pseudo
