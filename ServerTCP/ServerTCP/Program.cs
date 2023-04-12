@@ -42,24 +42,41 @@ namespace ServerTCP
             // remplie le buffer qu'on lui passe en parametre 
             // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
             int readByte;
-            do
+
+            // je rajoute un try catch pour la gestion des deconnexion sauvage coté client
+            try
             {
-                // remplie le buffer qu'on lui passe en parametre 
-                // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
-                readByte = clientSocket.Receive(buffer);
-                byte[] rData = new byte[readByte];
-                // on creer une copie a une taille nouvelle ajusté au nombre de byte reçu
-                Array.Copy(buffer, rData, readByte);
+                do
+                {
+                    // remplie le buffer qu'on lui passe en parametre 
+                    // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
+                    readByte = clientSocket.Receive(buffer);
+                    byte[] rData = new byte[readByte];
+                    // on creer une copie a une taille nouvelle ajusté au nombre de byte reçu
+                    Array.Copy(buffer, rData, readByte);
 
 
-                Console.WriteLine("we got :" + System.Text.Encoding.UTF8.GetString(rData));
-                //Console.WriteLine("we got :" + readByte.ToString());
+                    Console.WriteLine("we got :" + System.Text.Encoding.UTF8.GetString(rData));
+                    //Console.WriteLine("we got :" + readByte.ToString());
 
-                // Reponse du server
-                clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ \n"));
+                    // Reponse du server
+                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ \n"));
 
-            } while (readByte > 0);
+                } while (readByte > 0);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("oupsi");
+            }
+            finally
+            {
+                clientSocket.Close();
+                Console.WriteLine("client disconnect");
+            }
+
             Console.ReadKey();
+
         }
     }
 }
