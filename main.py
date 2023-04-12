@@ -2,7 +2,9 @@ from client import Client
 import sys
 import threading
 
-HOST = '10.57.33.239'  #IP address server machine
+# host local '10.57.33.239'
+
+HOST = '10.57.32.227'  #IP address server machine
 PORT = 3042
 
 client = Client(HOST,PORT)
