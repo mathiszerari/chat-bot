@@ -11,6 +11,7 @@ namespace ServerTCP
     public class Server
     {
         private int _clientNb = 0;
+        private static readonly List<Socket> _sockets = new List<Socket>();
 
         public Server()
         {
@@ -28,6 +29,8 @@ namespace ServerTCP
                 Console.WriteLine("j'attend une connexion");
                 serverSocket.Listen(10);
                 Socket clientSocket = serverSocket.Accept();  // Quand le server identifie une connexion la fonction accept return un objet socket qui correspond au client qui vient de creer cette nouvelle connexion
+
+                _sockets.Add(clientSocket);
 
                 _clientNb++;
                 // pour chaque nouvelle connexion on a un nouveau thread qui va gérer ce client a traver une fonction
@@ -57,7 +60,11 @@ namespace ServerTCP
                     string textReceived = System.Text.Encoding.UTF8.GetString(buffer);
                     Console.WriteLine("from (" + clientNb.ToString() + ") we got :" + textReceived);
                     // Reponse du server
-                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ"));
+                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ \n"));
+                    foreach (Socket s in _sockets)
+                    {
+                        s.Send(System.Text.Encoding.UTF8.GetBytes(textReceived + "\n"));
+                    }
 
                 } while (readByte > 0);
 
