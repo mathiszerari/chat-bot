@@ -39,6 +39,10 @@ namespace ServerTCP
 
                 Console.WriteLine("we got :" + System.Text.Encoding.UTF8.GetString(rData));
                 //Console.WriteLine("we got :" + readByte.ToString());
+
+                // Reponse du server
+                clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ"));
+
             } while (readByte > 0);
             Console.ReadKey();
         }
