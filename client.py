@@ -5,20 +5,20 @@ import time
 class Client:
 
     def __init__(self, server_host, server_port):
-        self.__server_host = server_host
-        self.__server_port = server_port
-        self.__sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
+        self._server_host = server_host
+        self._server_port = server_port
+        self._sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET = IPV4 address, SOCK_STREAM = use TCP protocol
         self.connect()
-        self.__pseudo = ""
+        self._pseudo = ""
     
     def get_server_host(self):
-        return self.__server_host
+        return self._server_host
     
     def get_server_port(self):
-        return self.__server_port
+        return self._server_port
     
     def get_pseudo(self):
-        return self.__pseudo
+        return self._pseudo
     
     def create_pseudo(self):
         tmp_pseudo = input("Enter pseudo : ")
@@ -26,12 +26,12 @@ class Client:
         while(len(tmp_pseudo)>20 or len(tmp_pseudo) <= 0):
             tmp_pseudo = input("Enter pseudo : ")
         
-        self.__pseudo = tmp_pseudo
+        self._pseudo = tmp_pseudo
     
     def connect(self):
-        self.__sckt.connect((self.__server_host,self.__server_port)) #Connect socket to server
+        self._sckt.connect((self._server_host,self._server_port)) #Connect socket to server
         self.create_pseudo()
-        self.__sckt.send((self.__pseudo + "\n").encode())
+        self._sckt.send((self._pseudo + "\n").encode())
     
     def disconnect(self):
         self.__sckt.close()
