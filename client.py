@@ -41,9 +41,8 @@ class Client:
 
 
     def receive_message(self):
-        print("AA")
-        client,address = self.__sckt.accept()
-        response = client.recv(1024) # Limit to 1024 characters
+
+        response = self.__sckt.recv(1024) # Limit to 1024 characters
         response = response.decode("utf8")
         print(response)
 
