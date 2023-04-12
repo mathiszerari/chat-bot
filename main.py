@@ -23,9 +23,11 @@ def choose_option():
             client.send_message("test1")
         
         elif(choice =="q" or choice == "Q"):
+            client.disconnect()
             sys.exit()
 
-
+while(True):
+    choose_option()
 
 
 # client.send_message("test1")

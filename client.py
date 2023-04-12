@@ -22,7 +22,7 @@ class Client:
     def create_pseudo(self):
         tmp_pseudo = input("Enter pseudo : ")
         
-        while(len(tmp_pseudo)>20 and len(tmp_pseudo) <= 0):
+        while(len(tmp_pseudo)>20 or len(tmp_pseudo) <= 0):
             tmp_pseudo = input("Enter pseudo : ")
         
         self.__pseudo = tmp_pseudo
@@ -30,6 +30,8 @@ class Client:
     def connect(self):
         self.__sckt.connect((self.__server_host,self.__server_port)) #Connect socket to server
     
+    def disconnect(self):
+        self.__sckt.close()
 
     def send_message(self,message):
         self.__sckt.send((message + "\n").encode()) #Send data to socket
