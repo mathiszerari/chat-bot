@@ -20,7 +20,7 @@ def choose_option():
         show_menu()
         choice = input("Choose option")
         if(choice =="1"):
-            client.send_message("test1")
+            client.send_message()
         
         elif(choice =="q" or choice == "Q"):
             client.disconnect()

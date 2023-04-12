@@ -33,7 +33,12 @@ class Client:
     def disconnect(self):
         self.__sckt.close()
 
-    def send_message(self,message):
+    def send_message(self):
+        message = input("Enter message : ")
+
+        while(len(message)<= 0):
+            message = input("Enter message : ")
+            
         self.__sckt.send((message + "\n").encode()) #Send data to socket
 
 
