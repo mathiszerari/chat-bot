@@ -9,16 +9,15 @@ namespace ServerTCP
 {
     public class User
     {
-        private Socket Socket { get; set; }
-        private int Number { get; set; }
-        private string Pseudo { get; set; }
-        private int age { get; set; }
+        public Socket Socket { get; set; }
+        public int Number { get; set; }
+        public string Pseudo { get; set; }
 
         public User(Socket s, int num)
         {
             Socket = s;
             Number = num;
-            Pseudo = "";
+            Pseudo = String.Empty;
         }
     }
 }

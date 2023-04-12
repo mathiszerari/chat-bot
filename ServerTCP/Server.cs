@@ -11,7 +11,8 @@ namespace ServerTCP
     public class Server
     {
         private int _clientNb = 0;
-        private static readonly List<Socket> _sockets = new List<Socket>();
+        //private static readonly List<Socket> _sockets = new List<Socket>();
+        private static readonly List<User> _users = new();
 
         public Server()
         {
@@ -29,23 +30,24 @@ namespace ServerTCP
                 Console.WriteLine("j'attend une connexion");
                 serverSocket.Listen(10);
                 Socket clientSocket = serverSocket.Accept();  // Quand le server identifie une connexion la fonction accept return un objet socket qui correspond au client qui vient de creer cette nouvelle connexion
-
-                _sockets.Add(clientSocket);
-
                 _clientNb++;
+
+                User user = new User(clientSocket, _clientNb);
+                _users.Add(user);
+
                 // pour chaque nouvelle connexion on a un nouveau thread qui va gérer ce client a traver une fonction
                 // le thread aura besoin d'au moins 1 info, le socket avec lequel travailler
                 Thread clientThread;
-                clientThread = new Thread(() => ClientConnection(clientSocket, _clientNb));
+                clientThread = new Thread(() => ClientConnection(user));
                 clientThread.Start();
             }
         }
 
 
         // fonction qui tourne sur les thread secondaire créer qui gère l'écoute des message de chaque client
-        private static void ClientConnection(Socket clientSocket, int clientNb)
+        private static void ClientConnection(User user)
         {
-            byte[] buffer = new byte[clientSocket.SendBufferSize];
+            byte[] buffer = new byte[user.Socket.SendBufferSize];
             //Console.WriteLine("Initial size of buffer" + buffer.Count());
 
             int readByte;
@@ -57,20 +59,45 @@ namespace ServerTCP
                 do
                 {
                     // Reception
-                    readByte = clientSocket.Receive(buffer); // remplie le buffer qu'on lui passe en parametre et  return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
+                    readByte = user.Socket.Receive(buffer); // remplie le buffer qu'on lui passe en parametre et  return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
                     // Traitement
                     string textReceived = System.Text.Encoding.UTF8.GetString(buffer);
-
-                    //Console.WriteLine("size of data" + readByte);
-                    //Console.WriteLine("size of buffer" + buffer.Count());
-                    Console.WriteLine("from (" + clientNb.ToString() + ") we got :" + textReceived);
-                    // Reponse du server
-                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("message bien reçu \n"));
-                    foreach (Socket s in _sockets)
+                    if (user.Pseudo.Length == 0)
                     {
-                        s.Send(System.Text.Encoding.UTF8.GetBytes("someone send : " + textReceived + "\n"));
+                        bool pseudoAvailable = true;
+                        Console.WriteLine("on verifie la dispo");
+                        if(_users.Any(x => x.Pseudo == textReceived))
+                        { 
+                                pseudoAvailable = false;
+                                Console.WriteLine("meme pseudo trouvé");
+                        }
+
+                        if (pseudoAvailable)
+                        {
+                            user.Pseudo = textReceived;
+                            user.Socket.Send(System.Text.Encoding.UTF8.GetBytes("Votre pseudo a bien été set \n"));
+                            Console.WriteLine("un pseudo a été affecté");
+                        }
+                        else
+                        {
+                            user.Socket.Send(System.Text.Encoding.UTF8.GetBytes("Pseudo déjà prit \n"));
+                        }
+                
                     }
-                    Array.Clear(buffer, 0, buffer.Length);
+                    else
+                    {
+                        Console.WriteLine("envoie classique du message");
+
+                        //Console.WriteLine("from (" + user.Number.ToString() + ") we got :" + textReceived);
+                        // Reponse du server
+                        user.Socket.Send(System.Text.Encoding.UTF8.GetBytes("message bien reçu \n"));
+                        foreach (User u in _users)
+                        {
+                            u.Socket.Send(System.Text.Encoding.UTF8.GetBytes(user.Pseudo + " send : " + textReceived + "\n"));
+                        }
+                        Array.Clear(buffer, 0, buffer.Length);
+
+                    }
 
 
 
@@ -83,8 +110,8 @@ namespace ServerTCP
             }
             finally
             {
-                clientSocket.Close();
-                _sockets.Remove(clientSocket);
+                user.Socket.Close();
+                _users.Remove(user);
                 Console.WriteLine("connexion perdu");
             }
 
