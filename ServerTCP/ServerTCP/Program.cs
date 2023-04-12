@@ -26,9 +26,20 @@ namespace ServerTCP
 
             // remplie le buffer qu'on lui passe en parametre 
             // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
-            int readByte = clientSocket.Receive(buffer);
-            Console.WriteLine(readByte);
-            Console.WriteLine(buffer);
+            int readByte;
+            do
+            {
+                // remplie le buffer qu'on lui passe en parametre 
+                // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
+                readByte = clientSocket.Receive(buffer);
+                byte[] rData = new byte[readByte];
+                // on creer une copie a une taille nouvelle ajusté au nombre de byte reçu
+                Array.Copy(buffer, rData, readByte);
+
+
+                Console.WriteLine("we got :" + System.Text.Encoding.UTF8.GetString(rData));
+                //Console.WriteLine("we got :" + readByte.ToString());
+            } while (readByte > 0);
             Console.ReadKey();
         }
     }
