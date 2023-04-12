@@ -19,11 +19,26 @@ namespace ServerTCP
             //on passe notre socket serveur en mode ecoute
             ServerSocket.Listen(10);
 
-            // Quand le listener identifie une connexion // lorsqu'il detecte une nouvelle connexion la fonction accept return un objet socket qui correspond au client qui vient de creer cette nouvelle connexion
-            Socket clientSocket = ServerSocket.Accept();
-            Console.WriteLine("connexion reussis !"); //pop lorsqu'on se connect, pas lorsqu'on envoie premier message
-            byte[] buffer = new byte[clientSocket.SendBufferSize];
+            int clientNb = 0;
+            while (true)
+            {
+                ServerSocket.Listen(10);
+                // Quand le listener identifie une connexion // lorsqu'il detecte une nouvelle connexion la fonction accept return un objet socket qui correspond au client qui vient de creer cette nouvelle connexion
+                Socket clientSocket = ServerSocket.Accept();
 
+                clientNb++;
+                Thread clientThread;
+                clientThread = new Thread(() => ClientConnection(clientSocket, clientNb));
+                clientThread.Start();
+            }       
+        }
+
+
+
+        private static void ClientConnection(Socket clientSocket, int clientNb)
+        {
+            Console.WriteLine("connexion réussis");
+            byte[] buffer = new byte[clientSocket.SendBufferSize];
             // remplie le buffer qu'on lui passe en parametre 
             // et en bonus return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
             int readByte;
@@ -41,7 +56,7 @@ namespace ServerTCP
                 //Console.WriteLine("we got :" + readByte.ToString());
 
                 // Reponse du server
-                clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ"));
+                clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ \n"));
 
             } while (readByte > 0);
             Console.ReadKey();
