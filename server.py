@@ -19,13 +19,17 @@ while True:
 
     response = client.recv(1024) # Limit to 1024 characters
     response = response.decode("utf8")
+    
+    
 
     if response != "":
+        print("B")
         messages = response.split("\n")
         messages.pop()
         print(messages)
         for message in messages:
             print(message)
+        response = ""
 
 print("Close")
 client.close()
