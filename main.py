@@ -22,16 +22,21 @@ def choose_option():
         show_menu()
         choice = input("Choose option")
         if(choice =="1"):
-            send_message_thread = threading.Thread(target=client.send_message)
-            send_message_thread.start()
-            send_message_thread.join()
+            client.send_message()
+            
         
         elif(choice =="q" or choice == "Q"):
             client.disconnect()
             sys.exit()
 
 while(True):
-    choose_option()
+    send_message_thread = threading.Thread(target=choose_option)
+    send_message_thread.start()
+    send_message_thread.join()
+
+    receive_message_thread = threading.Thread(target=client.receive_message)
+    receive_message_thread.start()
+    receive_message_thread.join()
 
 
 # client.send_message("test1")

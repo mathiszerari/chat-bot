@@ -35,14 +35,17 @@ class Client:
 
     def send_message(self):
         message = input("Enter message : ")
-
         while(len(message)<= 0):
-            message = input("Enter message : ")
-            
+            message = input("Enter message : ")    
         self.__sckt.send((message + "\n").encode()) #Send data to socket
 
 
-    
+    def receive_message(self):
+        print("AA")
+        client,address = self.__sckt.accept()
+        response = client.recv(1024) # Limit to 1024 characters
+        response = response.decode("utf8")
+        print(response)
 
 
 
