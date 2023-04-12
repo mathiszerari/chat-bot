@@ -46,6 +46,8 @@ namespace ServerTCP
         private static void ClientConnection(Socket clientSocket, int clientNb)
         {
             byte[] buffer = new byte[clientSocket.SendBufferSize];
+            //Console.WriteLine("Initial size of buffer" + buffer.Count());
+
             int readByte;
 
             Console.WriteLine("connexion réussis");
@@ -58,24 +60,31 @@ namespace ServerTCP
                     readByte = clientSocket.Receive(buffer); // remplie le buffer qu'on lui passe en parametre et  return un int qui correspond a la taille (nbr de byte) de ce qu'il vient de remplir dans le buffer
                     // Traitement
                     string textReceived = System.Text.Encoding.UTF8.GetString(buffer);
+
+                    //Console.WriteLine("size of data" + readByte);
+                    //Console.WriteLine("size of buffer" + buffer.Count());
                     Console.WriteLine("from (" + clientNb.ToString() + ") we got :" + textReceived);
                     // Reponse du server
-                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("reponseServ \n"));
+                    clientSocket.Send(System.Text.Encoding.UTF8.GetBytes("message bien reçu \n"));
                     foreach (Socket s in _sockets)
                     {
-                        s.Send(System.Text.Encoding.UTF8.GetBytes(textReceived + "\n"));
+                        s.Send(System.Text.Encoding.UTF8.GetBytes("someone send : " + textReceived + "\n"));
                     }
+                    Array.Clear(buffer, 0, buffer.Length);
+
+
 
                 } while (readByte > 0);
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine("oupsi");
+                Console.WriteLine(ex.Message);
             }
             finally
             {
                 clientSocket.Close();
+                _sockets.Remove(clientSocket);
                 Console.WriteLine("connexion perdu");
             }
 
