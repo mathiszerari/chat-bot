@@ -4,7 +4,7 @@ import threading
 
 # host local '10.57.33.239'
 
-HOST = '10.57.32.227'  #IP address server machine
+HOST = '10.57.33.239'  #IP address server machine
 PORT = 3042
 
 client = Client(HOST,PORT)
@@ -22,7 +22,9 @@ def choose_option():
         show_menu()
         choice = input("Choose option")
         if(choice =="1"):
-            client.send_message()
+            send_message_thread = threading.Thread(target=client.send_message)
+            send_message_thread.start()
+            send_message_thread.join()
         
         elif(choice =="q" or choice == "Q"):
             client.disconnect()
