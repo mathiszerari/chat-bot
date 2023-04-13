@@ -2,12 +2,13 @@ import tkinter
 import customtkinter
 
 class ChatSection():
-    def __init__(self, main_app, primary_color, send_button_font, chat_text_font, frame_listener) -> None:
+    def __init__(self, main_app, primary_color, send_button_font, chat_text_font, frame_listener, pseudo) -> None:
         self.main_app = main_app
         self.primary_color = primary_color
         self.send_button_font = send_button_font
         self.chat_text_font = chat_text_font
         self.frame_listener = frame_listener
+        self._pseudo = pseudo
 
         # footer frame wrapper
         self.bottom_frame = tkinter.Frame(main_app, padx=20, pady=20, width=500, background=self.primary_color)
@@ -43,7 +44,7 @@ class ChatSection():
             return
 
         # pseudo label
-        pseudo = "Pseudo"  # Pseudo à rendre dynamique
+        pseudo = self._pseudo  # Pseudo à rendre dynamique
         pseudo_label = customtkinter.CTkLabel(master=self.message_frame, text=pseudo, wraplength=450, pady=10, padx=0, font=self.chat_text_font, text_color="#ffffff", bg_color=self.primary_color, anchor="w", justify="left")
         pseudo_label.pack(side="top", anchor="w")
 
