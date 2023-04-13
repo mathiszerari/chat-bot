@@ -23,30 +23,41 @@ class Client:
     def create_pseudo(self):
         tmp_pseudo = input("Enter pseudo : ")
         
-        while(len(tmp_pseudo)>20 or len(tmp_pseudo) <= 0):
+        while(len(tmp_pseudo)>20 or len(tmp_pseudo) <= 0 or " " in tmp_pseudo):
             tmp_pseudo = input("Enter pseudo : ")
         
-        self._pseudo = tmp_pseudo
+        return tmp_pseudo
+    
+    def receive_pseudo(self):
+        tmp_pseudo = self.create_pseudo()
+        self._sckt.send((tmp_pseudo + "\n").encode())
+        response = self._sckt.recv(1024).decode("utf8")
+        return response, tmp_pseudo
     
     def connect(self):
         self._sckt.connect((self._server_host,self._server_port)) #Connect socket to server
-        self.create_pseudo()
-        self._sckt.send((self._pseudo + "\n").encode())
+        
+        response, tmp_pseudo = self.receive_pseudo()
+        print("Reponse pseudo : ", response)
+        while response=="Pseudo déjà prit \n":
+           response, tmp_pseudo = self.receive_pseudo()
+        
+        self._pseudo = tmp_pseudo
     
     def disconnect(self):
-        self.__sckt.close()
+        self._sckt.close()
 
     def send_message(self):
         message = input("Enter message : ")
         while(len(message)<= 0):
             message = input("Enter message : ")    
-        self.__sckt.send(message.encode()) #Send data to socket
+        self._sckt.send(message.encode()) #Send data to socket
 
 
     def receive_message(self):
         while(True):
-            response = self.__sckt.recv(1024).decode("utf8") # Limit to 1024 characters
-            print(len(response))
+            response = self._sckt.recv(1024).decode("utf8") # Limit to 1024 characters
+            print("reponse : ", response)
             if response !="":
                 print(response)
                 print("AAA")
