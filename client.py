@@ -28,19 +28,21 @@ class Client:
         
         return tmp_pseudo
     
-    def receive_pseudo(self):
-        tmp_pseudo = self.create_pseudo()
+    def receive_pseudo(self, tmp_pseudo):
         self._sckt.send((tmp_pseudo + "\n").encode())
         response = self._sckt.recv(1024).decode("utf8")
-        return response, tmp_pseudo
+        return response
     
     def connect(self):
         self._sckt.connect((self._server_host,self._server_port)) #Connect socket to server
         
-        response, tmp_pseudo = self.receive_pseudo()
+        tmp_pseudo = self.create_pseudo()
+        response = self.receive_pseudo(tmp_pseudo)
         print("Reponse pseudo : ", response)
+
         while response=="Pseudo déjà prit \n":
-           response, tmp_pseudo = self.receive_pseudo()
+           tmp_pseudo = self.create_pseudo()
+           response = self.receive_pseudo(tmp_pseudo)
         
         self._pseudo = tmp_pseudo
     
@@ -56,9 +58,11 @@ class Client:
 
     def receive_message(self):
         while(True):
-            response = self._sckt.recv(1024).decode("utf8") # Limit to 1024 characters
-            print("reponse : ", response)
-            if response !="":
+            response = self._sckt.recv(1024) # Limit to 1024 characters
+            response = response.decode("utf-8", "ignore").strip().strip('\x00')
+            
+
+            if len(response)!=0:
+                print("Condition bonne")
                 print(response)
-                print("AAA")
             time.sleep(3)
