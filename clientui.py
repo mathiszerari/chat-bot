@@ -67,11 +67,14 @@ class Clientui(customtkinter.CTk):
     def check_pseudo(self, pseudo, page):
 
         if(len(pseudo)>20 or len(pseudo) <= 0 or " " in pseudo): # Verif côté client 
-            self.generate_error("Pas d'esapce et pas plus de 20char")
+            self.generate_error("Pas d'espace et pas plus de 20char")
         else:
             if (self._user.connect(pseudo,self._reload_pseudo)): # Verif côté serveur
+                if self.label_error.winfo_ismapped():
+                    self.label_error.destroy()
                 self.go_chat(page)
             else:
+                self.generate_error("Pseudo déjà pris :(")
                 self._reload_pseudo = True
             
             

@@ -30,20 +30,24 @@ class ChatSection():
 
         self.inputMessage = customtkinter.CTkEntry(master=self.bottom_frame, placeholder_text="Ecrivez votre message ici...", width=300) # Input text
         self.inputMessage.pack(side="left", anchor="w")
-        self.button = customtkinter.CTkButton(master=self.bottom_frame, command=self.send_messsage, text="Envoyer", font=self.send_button_font, width=100)
+        self.button = customtkinter.CTkButton(master=self.bottom_frame, command=lambda : self.send_messsage(pseudo=self._pseudo), text="Envoyer", font=self.send_button_font, width=100)
         self.button.pack(side="right", anchor="e")
 
         self.message_frame = tkinter.Frame(self.message_canvas, bg=self.primary_color)
         self.message_canvas.create_window((0, 0), window=self.message_frame, anchor="sw")  # Add message frame to canvas
 
-        self.frame_listener.bind('<Return>', self.send_messsage)
+        self.frame_listener.bind('<Return>', lambda event: self.send_messsage(pseudo=self._pseudo))
 
-    def send_messsage(self, event = None):
+    def send_messsage(self,event = None, pseudo = None ):
         message = self.inputMessage.get()
         if len(message) == 0:
+            print("JHGFGHJKLKJHGFDGHegezgzegzegsnznzrtnzrnzrnrnrznrznrznrznrtnrzJKL")
             return
+        self.create_message_card(pseudo=pseudo,message=message)
+        self.inputMessage.delete(0, "end")
 
-        # pseudo label
+    def create_message_card(self,pseudo, message):
+         # pseudo label
         pseudo = self._pseudo  # Pseudo à rendre dynamique
         pseudo_label = customtkinter.CTkLabel(master=self.message_frame, text=pseudo, wraplength=450, pady=10, padx=0, font=self.chat_text_font, text_color="#ffffff", bg_color=self.primary_color, anchor="w", justify="left")
         pseudo_label.pack(side="top", anchor="w")
@@ -57,4 +61,3 @@ class ChatSection():
         self.message_canvas.configure(scrollregion=self.message_canvas.bbox("all"))
 
         # reset input value
-        self.inputMessage.delete(0, "end")
