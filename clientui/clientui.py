@@ -3,6 +3,8 @@ import tkinter
 from chatsection import ChatSection
 import sys
 
+from client import Client
+
 class Clientui(customtkinter.CTk):
     def __init__(self):
         super().__init__()
