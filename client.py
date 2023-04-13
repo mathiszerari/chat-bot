@@ -53,8 +53,8 @@ class Client:
     def disconnect(self):
         self._sckt.close()
 
-    def send_message(self):
-        message = input("Enter message : ")
+    def send_message(self, message):
+        #message = input("Enter message : ")
         while(len(message)<= 0):
             message = input("Enter message : ")    
         self._sckt.send(message.encode()) #Send data to socket
@@ -65,8 +65,10 @@ class Client:
             response = self._sckt.recv(1024) # Limit to 1024 characters
             response = response.decode("utf-8", "ignore").strip().strip('\x00')
             
-
             if len(response)!=0:
                 print("Condition bonne")
                 print(response)
+                return response
+            if not response:
+                break
             time.sleep(3)

@@ -5,7 +5,7 @@ import time
 
 # host local '10.57.33.239'
 
-HOST = '192.168.1.85'  #IP address server machine
+HOST = '192.168.0.23'  #IP address server machine
 PORT = 3042
 
 client = Client(HOST,PORT)

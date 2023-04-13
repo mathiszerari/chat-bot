@@ -1,13 +1,12 @@
 import customtkinter
 import tkinter
 from chatsection import ChatSection
+import threading
 import sys
+from client import Client
 
 HOST = '192.168.0.23'  #IP address server machine
 PORT = 3042
-
-
-from client import Client
 
 class Clientui(customtkinter.CTk):
     def __init__(self):
@@ -38,7 +37,8 @@ class Clientui(customtkinter.CTk):
     def create_chatpage(self):
         chat_page = tkinter.Frame(self, bg=self.primary_color)
         chat_page.pack(side="top")
-        ChatSection(chat_page , self.primary_color, self.send_button_font, self.chat_text_font, self, self._user)
+        chat_section = ChatSection(chat_page , self.primary_color, self.send_button_font, self.chat_text_font, self, self._user)
+        threading.Thread(target=chat_section.display_messages).start()
     
     def create_menu(self):
         page = tkinter.Frame(self, bg=self.primary_color, width=500, height=700,pady=275)
@@ -89,6 +89,8 @@ class Clientui(customtkinter.CTk):
     def go_chat(self, old_page):
         old_page.destroy()
         self.create_chatpage()
+        
+
 
     def go_pseudo(self, old_page):
         old_page.destroy()
