@@ -38,7 +38,7 @@ class Clientui(customtkinter.CTk):
     def create_chatpage(self):
         chat_page = tkinter.Frame(self, bg=self.primary_color)
         chat_page.pack(side="top")
-        ChatSection(chat_page , self.primary_color, self.send_button_font, self.chat_text_font, self, "Test")
+        ChatSection(chat_page , self.primary_color, self.send_button_font, self.chat_text_font, self, self._user)
     
     def create_menu(self):
         page = tkinter.Frame(self, bg=self.primary_color, width=500, height=700,pady=275)

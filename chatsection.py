@@ -2,13 +2,13 @@ import tkinter
 import customtkinter
 
 class ChatSection():
-    def __init__(self, main_app, primary_color, send_button_font, chat_text_font, frame_listener, pseudo) -> None:
+    def __init__(self, main_app, primary_color, send_button_font, chat_text_font, frame_listener, user) -> None:
         self.main_app = main_app
         self.primary_color = primary_color
         self.send_button_font = send_button_font
         self.chat_text_font = chat_text_font
         self.frame_listener = frame_listener
-        self._pseudo = pseudo
+        self._user = user
 
         # footer frame wrapper
         self.bottom_frame = tkinter.Frame(main_app, padx=20, pady=20, width=500, background=self.primary_color)
@@ -41,7 +41,6 @@ class ChatSection():
     def send_messsage(self,event = None, pseudo = None ):
         message = self.inputMessage.get()
         if len(message) == 0:
-            print("JHGFGHJKLKJHGFDGHegezgzegzegsnznzrtnzrnzrnrnrznrznrznrznrtnrzJKL")
             return
         self.create_message_card(pseudo=pseudo,message=message)
         self.inputMessage.delete(0, "end")
